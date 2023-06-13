@@ -1,0 +1,16 @@
+function downloadCSV(data, filename) {
+ const csv = data.join('\n');
+ const element = document.createElement('a');
+ element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+ element.setAttribute('download', filename);
+ element.style.display = 'none';
+ document.body.appendChild(element);
+ element.click();
+ document.body.removeChild(element);
+}
+
+var annotations = Array.from(document.querySelectorAll('.ga-table-contents')[0].rows)
+ .map(row => Array.from(row.cells).slice(1, 4).map(cell => `"${cell.innerText.replace(/"/g, '""')}"`));
+var headerRow = ['Name', 'Creator', 'Date'];
+var csvData = [headerRow, ...annotations].map(row => row.join(','));
+downloadCSV(csvData, 'annotations.csv');
